@@ -13,10 +13,7 @@
 name: Bandit
 on:
   workflow_dispatch:
-name: CI
-
-on: [push]
-
+  
 jobs:
   sast_scan:
     name: Run Bandit Scan
