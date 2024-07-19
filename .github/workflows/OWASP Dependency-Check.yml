@@ -20,9 +20,11 @@ jobs:
       run: |
         wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.2.1/dependency-check-8.2.1-release.zip
         unzip dependency-check-8.2.1-release.zip -d dependency-check
+        ls -R dependency-check  # List files for diagnosis
 
     - name: Run OWASP Dependency-Check
       run: |
+        ls -R dependency-check  # List files for diagnosis
         ./dependency-check/bin/dependency-check.sh --project "PyGoat" --scan ${{ github.workspace }} --format JSON --out ${{ github.workspace }}/odc-reports
 
     - name: Upload dependency check report
