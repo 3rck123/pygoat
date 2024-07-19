@@ -1,8 +1,8 @@
 name: Dependency Check
 
 on: 
- workflow_dispatch:
-
+  workflow_dispatch:
+  
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
@@ -18,12 +18,12 @@ jobs:
 
     - name: Install Dependency-Check
       run: |
-        wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
-        unzip dependency-check-6.5.3-release.zip -d dependency-check
+        wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.2.1/dependency-check-8.2.1-release.zip
+        unzip dependency-check-8.2.1-release.zip -d dependency-check
 
     - name: Run OWASP Dependency-Check
       run: |
-        dependency-check/bin/dependency-check.sh --project "PyGoat" --scan ${{ github.workspace }} --format JSON --out ${{ github.workspace }}/odc-reports
+        ./dependency-check/bin/dependency-check.sh --project "PyGoat" --scan ${{ github.workspace }} --format JSON --out ${{ github.workspace }}/odc-reports
 
     - name: Upload dependency check report
       uses: actions/upload-artifact@v2
