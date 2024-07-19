@@ -1,0 +1,34 @@
+name: Brakeman Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  brakeman:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7' # Adapte para a versão do Ruby que você está usando
+
+    - name: Install Brakeman
+      run: gem install brakeman
+
+    - name: Run Brakeman
+      run: brakeman -o brakeman-output.json
+
+    - name: Upload Brakeman Analysis Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: brakeman-analysis-results
+        path: brakeman-output.json
