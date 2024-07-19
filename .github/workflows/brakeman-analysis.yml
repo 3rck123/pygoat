@@ -20,7 +20,7 @@ jobs:
       run: gem install brakeman
 
     - name: Run Brakeman
-      run: brakeman -o brakeman-output.json
+      run: brakeman -o brakeman-output.json --force
 
     - name: Upload Brakeman Analysis Results
       uses: actions/upload-artifact@v3
