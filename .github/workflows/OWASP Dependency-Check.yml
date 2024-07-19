@@ -1,4 +1,4 @@
-name: OWASP Dependency-Check
+name: Dependency Check
 
 on:
  workflow_dispatch:
@@ -8,26 +8,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-      - name: Run OWASP Dependency-Check
-        run: |
-          mkdir -p odc-reports
-          docker run --rm \
-            -v $(pwd)/odc-reports:/report \
-            -v $(pwd):/src \
-            owasp/dependency-check \
-            --format "ALL" \
-            --project "My Project" \
-            --out /report \
-            --scan /src
-          
-      - name: Upload report
-        uses: actions/upload-artifact@v2
-        with:
-          name: dependency-check-report
-          path: odc-reports
+    - name: Create report directory
+      run: mkdir -p odc-reports
+
+    - name: Run OWASP Dependency-Check
+      env:
+        NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      run: |
+        docker run --rm \
+          --volume $(pwd):/src \
+          --volume $(pwd)/odc-reports:/report \
+          owasp/dependency-check \
+          --project "PyGoat" \
+          --scan /src \
+          --format JSON \
+          --out /report
+
+    - name: Upload dependency check report
+      uses: actions/upload-artifact@v2
+      with:
+        name: dependency-check-report
+        path: odc-reports/dependency-check-report.json
