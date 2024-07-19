@@ -1,8 +1,8 @@
 name: Dependency Check
 
-on:
+on: 
  workflow_dispatch:
- 
+
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
@@ -11,24 +11,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+    - name: Set up Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
 
-    - name: Create report directory
-      run: mkdir -p odc-reports
+    - name: Install Dependency-Check
+      run: |
+        wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
+        unzip dependency-check-6.5.3-release.zip -d dependency-check
 
     - name: Run OWASP Dependency-Check
-      env:
-        NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
       run: |
-        docker run --rm \
-          --volume $(pwd):/src \
-          --volume $(pwd)/odc-reports:/report \
-          owasp/dependency-check \
-          --project "PyGoat" \
-          --scan /src \
-          --format JSON \
-          --out /report
+        dependency-check/bin/dependency-check.sh --project "PyGoat" --scan ${{ github.workspace }} --format JSON --out ${{ github.workspace }}/odc-reports
 
     - name: Upload dependency check report
       uses: actions/upload-artifact@v2
