@@ -16,13 +16,14 @@ jobs:
 
       - name: Run OWASP Dependency-Check
         run: |
-          docker pull owasp/dependency-check
+          mkdir -p odc-reports
           docker run --rm \
             -v $(pwd)/odc-reports:/report \
             -v $(pwd):/src \
             owasp/dependency-check \
             --format "ALL" \
             --project "My Project" \
+            --out /report \
             --scan /src
           
       - name: Upload report
